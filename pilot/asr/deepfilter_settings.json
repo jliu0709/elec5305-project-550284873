@@ -1,0 +1,13 @@
+{
+  "release": "v0.5.6",
+  "model": "DeepFilterNet3",
+  "model_source": "Embedded in the official v0.5.6 binary",
+  "binary_sha256": "70775e251eee44c0f2451a1e833326cf8bcbbe304d3e7cd12851e6fce72ef7da",
+  "resampling": "scipy.signal.resample_poly",
+  "scipy_version": "1.16.3",
+  "sample_rates": "16000 -> 48000 -> 16000",
+  "delay_compensation": true,
+  "tail_padding_seconds": 1,
+  "post_filter": false,
+  "output_format": "FLOAT WAV"
+}

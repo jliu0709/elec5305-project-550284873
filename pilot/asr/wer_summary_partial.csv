@@ -1,0 +1,5 @@
+﻿condition,wer_percent,substitutions,deletions,insertions,reference_words
+clean,6.5891472868217065,13,4,0,258
+noisy,5.813953488372093,12,3,0,258
+spectral_subtraction,5.426356589147287,11,3,0,258
+wiener,5.426356589147287,11,3,0,258
