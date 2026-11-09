@@ -1,0 +1,5 @@
+analysis,method,errors,reference_words,wer_percent,delta_wer_pp
+all_rows,deepfilternet3,1050,7344,14.297385620915033,3.771786492374728
+all_rows,noisy,773,7344,10.525599128540305,0.0
+matched_failure_removed,deepfilternet3,999,7312,13.662472647702407,3.0908096280087527
+matched_failure_removed,noisy,773,7312,10.571663019693654,0.0

@@ -1,0 +1,14 @@
+{
+  "release": "v0.5.6",
+  "model": "DeepFilterNet3",
+  "model_source": "embedded in official v0.5.6 binary",
+  "binary": "deep-filter-0.5.6-x86_64-pc-windows-msvc.exe",
+  "binary_sha256": "75e11fa16445f560cb6b021521ddb89e89270d13b83089705d98776f58fd7915",
+  "resampling": "scipy.signal.resample_poly",
+  "scipy_version": "1.18.1",
+  "sample_rates": "16000 -> 48000 -> 16000",
+  "delay_compensation": true,
+  "tail_padding_seconds": 1,
+  "post_filter": false,
+  "output_format": "32-bit float WAV"
+}

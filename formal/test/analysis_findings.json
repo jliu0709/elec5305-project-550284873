@@ -1,0 +1,139 @@
+{
+  "test_transcription_rows": 2300,
+  "clean_wer_percent": 5.0245098039215685,
+  "overall_methods": [
+    {
+      "method": "noisy",
+      "wer_percent": 10.525599128540305,
+      "substitutions": 598,
+      "deletions": 59,
+      "insertions": 116,
+      "reference_words": 7344,
+      "mean_asr_seconds": 0.37013835133363804,
+      "mean_asr_rtf": 0.06286849201925841,
+      "delta_wer_pp": 0.0,
+      "relative_wer_change_percent": 0.0
+    },
+    {
+      "method": "spectral_subtraction",
+      "wer_percent": 10.25326797385621,
+      "substitutions": 590,
+      "deletions": 55,
+      "insertions": 108,
+      "reference_words": 7344,
+      "mean_asr_seconds": 0.47719329977563274,
+      "mean_asr_rtf": 0.10535771206232343,
+      "delta_wer_pp": -0.2723311546840961,
+      "relative_wer_change_percent": -2.5873221216041418
+    },
+    {
+      "method": "wiener",
+      "wer_percent": 11.029411764705882,
+      "substitutions": 623,
+      "deletions": 57,
+      "insertions": 130,
+      "reference_words": 7344,
+      "mean_asr_seconds": 0.3704784286679286,
+      "mean_asr_rtf": 0.06303818322872846,
+      "delta_wer_pp": 0.503812636165577,
+      "relative_wer_change_percent": 4.786545924967656
+    },
+    {
+      "method": "deepfilternet3",
+      "wer_percent": 14.297385620915032,
+      "substitutions": 761,
+      "deletions": 71,
+      "insertions": 218,
+      "reference_words": 7344,
+      "mean_asr_seconds": 0.3965969086650552,
+      "mean_asr_rtf": 0.06656674308645723,
+      "delta_wer_pp": 3.7717864923747264,
+      "relative_wer_change_percent": 35.834411384217326
+    },
+    {
+      "method": "spectral_subtraction_modified",
+      "wer_percent": 10.620915032679738,
+      "substitutions": 620,
+      "deletions": 49,
+      "insertions": 111,
+      "reference_words": 7344,
+      "mean_asr_seconds": 0.3703389224503189,
+      "mean_asr_rtf": 0.0628906626916436,
+      "delta_wer_pp": 0.09531590413943292,
+      "relative_wer_change_percent": 0.9055627425614429
+    }
+  ],
+  "feature_wer_condition_correlation": 0.6664278024427691,
+  "selected_success": {
+    "case_type": "success",
+    "utterance_id": "6319-57405-0000",
+    "noise_type": "white",
+    "target_snr_db": 0.0,
+    "method": "spectral_subtraction",
+    "reference_text": "IN THOSE VERY EARLY TIMES THERE WAS A MAN NAMED DEUCALION AND HE WAS THE SON OF PROMETHEUS",
+    "noisy_hypothesis_text": "In those very early times, there was a man named because I think it was the sign up for me again.",
+    "hypothesis_text": "In those very early times, there was a man named Duque, and he was the son of Ponegia.",
+    "noisy_errors": 9,
+    "errors": 2,
+    "delta_errors": -7,
+    "substitutions": 2,
+    "deletions": 0,
+    "insertions": 0,
+    "noisy_utterance_wer_percent": 50.0,
+    "utterance_wer_percent": 11.11111111111111,
+    "delta_utterance_wer_pp": -38.888888888888886
+  },
+  "selected_failure": {
+    "case_type": "failure",
+    "utterance_id": "3536-23268-0002",
+    "noise_type": "office",
+    "target_snr_db": 5.0,
+    "method": "deepfilternet3",
+    "reference_text": "YET DID THE WATCHFUL MISS WOODLEY OFTENTIMES HEAR A SIGH ESCAPE FROM HER UNKNOWN TO HERSELF TILL SHE WAS REMINDED OF IT AND THEN A SUDDEN BLUSH WOULD INSTANTLY OVERSPREAD HER FACE",
+    "noisy_hypothesis_text": "Yet, did the watchful Miss Woodley oftentimes hear a sigh escape from her unknown to herself, till she was reminded of it, and then a sudden blush would instantly overspread her face?",
+    "hypothesis_text": "Yet did the watchful Miss Woodley oftentimes hear a sigh escape from her unknown to herself, till she was reminded of it, and then a sudden blush would instantly over-spread her face. Okay. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right. All right.",
+    "noisy_errors": 0,
+    "errors": 51,
+    "delta_errors": 51,
+    "substitutions": 1,
+    "deletions": 0,
+    "insertions": 50,
+    "noisy_utterance_wer_percent": 0.0,
+    "utterance_wer_percent": 159.375,
+    "delta_utterance_wer_pp": 159.375
+  },
+  "failure_case_sensitivity": [
+    {
+      "analysis": "all_rows",
+      "method": "deepfilternet3",
+      "errors": 1050,
+      "reference_words": 7344,
+      "wer_percent": 14.297385620915033,
+      "delta_wer_pp": 3.771786492374728
+    },
+    {
+      "analysis": "all_rows",
+      "method": "noisy",
+      "errors": 773,
+      "reference_words": 7344,
+      "wer_percent": 10.525599128540305,
+      "delta_wer_pp": 0.0
+    },
+    {
+      "analysis": "matched_failure_removed",
+      "method": "deepfilternet3",
+      "errors": 999,
+      "reference_words": 7312,
+      "wer_percent": 13.662472647702407,
+      "delta_wer_pp": 3.0908096280087527
+    },
+    {
+      "analysis": "matched_failure_removed",
+      "method": "noisy",
+      "errors": 773,
+      "reference_words": 7312,
+      "wer_percent": 10.571663019693654,
+      "delta_wer_pp": 0.0
+    }
+  ]
+}

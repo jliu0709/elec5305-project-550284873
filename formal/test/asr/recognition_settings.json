@@ -1,0 +1,23 @@
+{
+  "model": "base.en",
+  "device": "cuda",
+  "decode_settings": {
+    "language": "en",
+    "task": "transcribe",
+    "temperature": 0.0,
+    "beam_size": 5,
+    "fp16": false,
+    "condition_on_previous_text": false,
+    "compression_ratio_threshold": 2.4,
+    "logprob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "verbose": null
+  },
+  "normalizer": "Whisper EnglishTextNormalizer",
+  "openai_whisper_version": "20250625",
+  "jiwer_version": "4.0.0",
+  "torch_version": "2.11.0+cu130",
+  "cuda_runtime": "13.0",
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "seed": 5305
+}
