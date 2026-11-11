@@ -1,70 +1,196 @@
 # The Effect of Speech Enhancement on Whisper Speech Recognition
 
-**ELEC5305 Individual Project**  
-**Name:** Jinyuan Liu  
-**Student ID:** 550284873
+This ELEC5305 project studies whether speech enhancement improves the recognition performance of a fixed Whisper model. The experiment compares:
 
-## Project overview
+- no enhancement;
+- spectral subtraction;
+- Wiener filtering;
+- pretrained DeepFilterNet3;
+- clean speech as a reference.
 
-This project studies whether reducing noise before using Whisper improves speech recognition. Denoising can make speech clearer, but it may also remove useful speech sounds and make recognition worse.
+No new neural network was trained. The main question is whether a cleaner signal also gives a lower word error rate (WER).
 
-The experiment will compare four approaches:
+## Main experiment files
 
-- No enhancement
-- Spectral subtraction
-- Wiener filtering
-- Pretrained DeepFilterNet
+The final experiment was run locally with MATLAB and VS Code. Google Colab is not required.
 
-Each approach will process the same noisy recording separately. All recordings will then be tested with the same Whisper model and settings. Clean speech will provide a reference result.
+- `ELEC5305_Final_MATLAB.mlx` contains the complete MATLAB stage. It prepares the mixtures, runs spectral subtraction and Wiener filtering, evaluates waveform metrics, and creates MATLAB figures.
+- `ELEC5305_Final_VSCode.ipynb` contains the complete Python stage. It runs DeepFilterNet3, Whisper, WER evaluation, log-Mel analysis, plots, and result validation.
 
-## Experiment plan
+The two files should be run in this order:
 
-| Item | Plan |
-| --- | --- |
-| Speech data | Mini LibriSpeech recordings with reference transcripts |
-| Noise | White noise, DEMAND office noise and another environment, such as traffic |
-| Input SNR | 0, 5 and 10 dB |
-| Whisper model | `base.en`, without further training |
-| First experiment | 10 recordings with office noise at 0 dB |
-| Main experiment | 50–100 recordings from several speakers |
+1. Run `ELEC5305_Final_MATLAB.mlx` in MATLAB.
+2. Run `ELEC5305_Final_VSCode.ipynb` in VS Code with a Python 3.12 kernel.
 
-A separate small set of recordings will be used to choose parameters. The parameters will then remain unchanged during the final tests. DeepFilterNet will also be used without further training.
+The earlier pilot experiment is stored separately and is not required to rerun this final experiment.
 
-## Evaluation
+## Experiment design
 
-Word Error Rate (WER) will be the main measure. A lower WER means fewer recognition errors. Results will be compared with the original noisy speech to see whether enhancement helps.
+- Pilot: 10 Mini LibriSpeech utterances, office noise, 0 dB.
+- Development set: 5 utterances from 5 speakers, used only for parameter selection.
+- Test set: 50 utterances from 21 speakers.
+- Development and test speakers are different.
+- Noise types: white noise, DEMAND office noise, and DEMAND traffic noise.
+- Input SNRs: 0, 5, and 10 dB.
+- Whisper model: `base.en` with fixed decoding settings.
+- Main metrics: corpus WER, substitutions, deletions, insertions, STOI, output SNR, SNR improvement, log-Mel distance, and real-time factor.
 
-SNR, STOI and Whisper's log-Mel features will help explain the results. Spectrograms, transcripts and informal listening will be used to examine selected errors. Processing time will also be recorded.
+For the four main processing conditions, the test contains 1,800 noisy or enhanced recognition cases. It also contains 50 clean recognitions and 450 results for the modified spectral-subtraction setting.
 
-## Tools and current progress
+## Fair comparison
 
-MATLAB will be used for audio preparation, spectral subtraction, Wiener filtering and signal evaluation. Python will be used for DeepFilterNet, Whisper and WER calculation.
+All base speech is mono 16 kHz. For the same utterance, noise type, and SNR, every method receives the same saved noisy signal.
 
-The revised proposal and initial MATLAB script are ready. The script has not yet been tested in MATLAB. DeepFilterNet, Whisper and the evaluation code still need to be added. Experimental results are not yet available.
+The noise gain is:
 
-## Running the initial MATLAB experiment
+`noise_gain = sqrt(P_clean / (P_noise * 10^(SNR_dB/10)))`
 
-The experiment starter prepares noisy audio and exports the spectral subtraction and Wiener filtering results. It requires MATLAB and Signal Processing Toolbox.
+A common scale is applied to the mixture and the clean evaluation reference to prevent clipping without changing the target SNR. A one-second noise-only prefix is used for the initial noise estimate. This prefix is removed before recognition and evaluation. Clean speech is not used by any enhancement method.
 
-1. Extract the experiment starter into the project folder.
-2. Place ten clean WAV files in `experiment/data/clean/`.
-3. Place a single-channel office-noise WAV file at `experiment/data/noise/office.wav`.
-4. Add the recording IDs and correct transcripts to `experiment/utterances.csv`.
-5. Set MATLAB's Current Folder to `experiment/` and run `matlab/run_pilot.m`.
-6. Check the exported audio and the mixing records in `results/mixing_manifest.csv`.
+Spectral subtraction and Wiener filtering use the same settings:
 
-Dataset audio is not included in the starter. Instructions for the Python stage will be added after integration and testing.
+- 512-sample frame;
+- 128-sample hop;
+- square-root periodic Hann window;
+- the same initial noise estimate;
+- the noisy phase for reconstruction.
 
-## Next steps
+DeepFilterNet3 uses the official DeepFilterNet v0.5.6 model. Audio is resampled from 16 kHz to 48 kHz and then back to 16 kHz. Delay compensation is enabled.
 
-Complete the ten-recording experiment, compare WER across the five conditions, add the audio analysis and expand the tests. Code, software versions, experiment records and running instructions will be updated as the project develops.
+## Final results
 
-## Resources
+The main test results are:
 
-- [Whisper](https://github.com/openai/whisper)
-- [Mini LibriSpeech](https://www.openslr.org/31/)
-- [DEMAND noise dataset](https://zenodo.org/records/1227121)
-- [DeepFilterNet](https://github.com/Rikorose/DeepFilterNet)
-- [JiWER](https://github.com/jitsi/jiwer)
+| Method | WER (%) | Difference from no enhancement (percentage points) |
+| --- | ---: | ---: |
+| No enhancement | 10.54 | 0.00 |
+| Spectral subtraction, alpha = 1.0 | 10.24 | -0.30 |
+| Wiener filtering | 11.03 | +0.49 |
+| DeepFilterNet3 | 14.28 | +3.74 |
+| Spectral subtraction, alpha = 1.5 | 10.62 | +0.08 |
 
-See the revised proposal for academic references.
+Clean-speech WER was 5.02%. Spectral subtraction with `alpha = 1.0` had the lowest overall noisy-speech WER, but its 95% confidence interval included zero. DeepFilterNet3 improved output SNR and usually improved STOI, but it increased WER. This result shows that better signal metrics do not always mean better Whisper recognition.
+
+The development set selected `alpha = 1.5`. On the independent test set, its WER was 10.62%, compared with 10.24% for the original `alpha = 1.0` setting.
+
+## Folder structure
+
+The complete final experiment folder uses this structure:
+
+```text
+ELEC5305_Final/
+  ELEC5305_Final_MATLAB.mlx
+  ELEC5305_Final_VSCode.ipynb
+  data/
+    clean/development/
+    clean/test/
+    noise/
+    splits/
+  results/
+    final/development/
+    final/test/
+  vscode_code/
+  data.zip
+  ELEC5305_Final_Results.zip
+```
+
+## Data
+
+The experiment uses:
+
+- LibriSpeech speech and transcripts from [OpenSLR 12](https://www.openslr.org/12);
+- office and traffic noise from [DEMAND](https://zenodo.org/records/1227121);
+- generated white noise.
+
+The exact development and test lists are stored in:
+
+- `data/splits/development_manifest.csv`;
+- `data/splits/test_manifest.csv`.
+
+The final experiment folder already contains the prepared speech, noise files, manifests, and saved results used in the report.
+
+## Software
+
+### MATLAB
+
+- MATLAB R2025b;
+- Signal Processing Toolbox;
+- Audio Toolbox;
+- Parallel Computing Toolbox is optional.
+
+### Python
+
+- Python 3.12;
+- `openai-whisper 20250625`;
+- `torch 2.9.1+cu128`;
+- CUDA 12.8 for the completed GPU run;
+- `jiwer 4.0.0`;
+- NumPy, pandas, SciPy, SoundFile, Matplotlib, pystoi, and imageio-ffmpeg.
+
+The completed run used an NVIDIA GeForce RTX 5070 Laptop GPU. A CUDA GPU reduces runtime, but Whisper can also run on CPU.
+
+Example environment setup:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cu128
+pip install openai-whisper==20250625 jiwer==4.0.0 scipy pandas soundfile matplotlib pystoi imageio-ffmpeg
+```
+
+## Running the final experiment
+
+### 1. MATLAB
+
+Open the final experiment folder in MATLAB and run:
+
+`ELEC5305_Final_MATLAB.mlx`
+
+The MATLAB stage creates the saved noisy mixtures and the classical enhancement outputs. It also calculates waveform metrics and produces the MATLAB figures.
+
+### 2. VS Code
+
+Open this file in VS Code:
+
+`ELEC5305_Final_VSCode.ipynb`
+
+Select a Python 3.12 kernel. At the start of the notebook, change `PROJECT_ROOT` to the local final experiment folder. If the folder is moved to another location, also update the notebook's `%%writefile` paths before running all cells.
+
+The notebook then:
+
+1. installs or checks the Python packages;
+2. prepares the Python scripts;
+3. runs DeepFilterNet3;
+4. runs fixed Whisper `base.en`;
+5. selects the spectral-subtraction coefficient using the development set;
+6. evaluates the test set;
+7. calculates log-Mel distance and waveform metrics;
+8. creates the final figures;
+9. validates the saved results.
+
+The long stages save intermediate files, so the experiment can be restarted without repeating every completed item.
+
+## Important result files
+
+- `results/final/validation_report.json`: experiment completeness and alignment checks.
+- `results/final/test/asr/wer_summary_overall.csv`: overall WER and error counts.
+- `results/final/test/asr/wer_summary_by_condition.csv`: WER for each noise and SNR.
+- `results/final/test/metrics_summary.csv`: SNR, STOI, alignment, and processing time.
+- `results/final/test/logmel_summary.csv`: Whisper log-Mel distances.
+- `results/final/test/delta_wer_cluster_bootstrap.csv`: paired confidence intervals.
+- `results/final/test/figures/`: final figures used in the report.
+- `results/final/test/examples/`: selected success and failure cases.
+
+Corpus WER is calculated as total `(substitutions + deletions + insertions) / reference words`. It is not the simple average of utterance WERs. Negative delta WER means the enhancement method improved recognition relative to the matched noisy condition.
+
+## Third-party resources
+
+- LibriSpeech / OpenSLR speech and transcripts;
+- DEMAND environmental noise;
+- OpenAI Whisper pretrained `base.en` model;
+- DeepFilterNet pretrained DeepFilterNet3 model and official inference program;
+- jiwer for WER alignment and error counts;
+- pystoi for STOI.
+
+This project did not train a new neural network. The main work was preparing noisy speech, implementing spectral subtraction and Wiener filtering, using pretrained DeepFilterNet3 and Whisper, calculating the evaluation metrics, plotting the results, and analysing cases where better signal quality did not lead to better recognition.
